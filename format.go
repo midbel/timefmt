@@ -51,7 +51,7 @@ var tokens = map[byte]formatFunc{
 	'c': formatDatetime,
 	'C': formatCentury,
 	'd': formatDay,
-	'D': nil,
+	'D': formatDateAlt,
 	'e': nil,
 	'F': formatDate,
 	'g': nil,
@@ -112,6 +112,14 @@ func formatLongTime(t time.Time, w io.Writer) {
 	formatShortTime(t, w)
 	io.WriteString(w, ":")
 	formatSeconds(t, w)
+}
+
+func formatDateAlt(t time.Time, w io.Writer) {
+	formatDay(t, w)
+	io.WriteString(w, "/")
+	formatMonth(t, w)
+	io.WriteString(w, "/")
+	formatLongYear(t, w)
 }
 
 func formatDate(t time.Time, w io.Writer) {

@@ -23,6 +23,7 @@ func TestFormat(t *testing.T) {
 		{Format: "%R", Want: "17:35"},
 		{Format: "%H:%M:%S", Want: "17:35:18"},
 		{Format: "%T", Want: "17:35:18"},
+		{Format: "%D", Want: "08/05/2019"},
 	}
 	for i, d := range data {
 		got := Format(when, d.Format)
