@@ -54,6 +54,8 @@ var tokens = map[byte]formatFunc{
 	'D': nil,
 	'e': nil,
 	'F': formatDate,
+	'g': nil,
+	'G': formatYearISO,
 	'H': formatHour24,
 	'I': formatHour12,
 	'j': formatYearDay,
@@ -79,6 +81,11 @@ var tokens = map[byte]formatFunc{
 func formatWeekNumberISO(t time.Time, w io.Writer) {
 	_, wk := t.ISOWeek()
 	io.WriteString(w, fmt.Sprintf("%02d", wk))
+}
+
+func formatYearISO(t time.Time, w io.Writer) {
+	yk, _ := t.ISOWeek()
+	io.WriteString(w, fmt.Sprintf("%04d", yk))
 }
 
 func formatIMSP(t time.Time, w io.Writer) {
