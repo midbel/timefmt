@@ -22,8 +22,11 @@ func Format(w time.Time, pattern string) string {
 			if err != nil {
 				break
 			}
-			fn, ok := specifiers[b]
-			if !ok || fn == nil {
+			if b == 'E' || b == 'O' {
+				// ignore alternative conversion specifier (at least for now)
+				b, _ = r.ReadByte()
+			}
+			if fn, ok := specifiers[b]; !ok || fn == nil {
 				buf.WriteByte('%')
 				buf.WriteByte(b)
 			} else {
