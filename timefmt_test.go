@@ -16,12 +16,14 @@ func TestParse(t *testing.T) {
 	}{
 		{Format: "%Y", Data: "2019", Want: time.Date(2019, 1, 1, 0, 0, 0, 0, time.Local)},
 		{Format: "%Y-%m-%d", Data: "2019-05-08", Want: time.Date(2019, 5, 8, 0, 0, 0, 0, time.Local)},
+		{Format: "%x", Data: "2019-05-08", Want: time.Date(2019, 5, 8, 0, 0, 0, 0, time.Local)},
 		{Format: "%d/%m/%Y", Data: "08/05/2019", Want: time.Date(2019, 5, 8, 0, 0, 0, 0, time.Local)},
 		{Format: "%D", Data: "08/05/2019", Want: time.Date(2019, 5, 8, 0, 0, 0, 0, time.Local)},
 		{Format: "%H:%M", Data: "17:35", Want: timeNow().Truncate(60 * time.Second)},
 		{Format: "%R", Data: "17:35", Want: timeNow().Truncate(60 * time.Second)},
 		{Format: "%H:%M:%S", Data: "17:35:18", Want: timeNow()},
 		{Format: "%T", Data: "17:35:18", Want: timeNow()},
+		{Format: "%X", Data: "17:35:18", Want: timeNow()},
 	}
 	for i, d := range data {
 		got := Parse(d.Data, d.Format)

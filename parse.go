@@ -77,15 +77,34 @@ var converters map[byte]parseFunc
 
 func init() {
 	converters = map[byte]parseFunc{
+		'a': parseDayName,
+		'A': parseDayName,
+		'b': parseMonthName,
+		'B': parseMonthName,
 		'd': parseDay,
+		'e': parseDay,
 		'D': parseDateAlt,
 		'H': parseHour,
+		'I': parseYearDay,
 		'm': parseMonth,
 		'M': parseMinute,
 		'S': parseSecond,
 		'R': parseShortTime,
 		'T': parseLongTime,
 		'Y': parseLongYear,
+		'n': parseSpace,
+		't': parseSpace,
+		'x': parseDate,
+		'X': parseLongTime,
+	}
+}
+
+func parseSpace(_ *datetime, bs []byte) int {
+	switch bs[0] {
+	default:
+		return 0
+	case '\n', '\t', ' ':
+		return 1
 	}
 }
 
@@ -115,8 +134,7 @@ func parseLongTime(dt *datetime, bs []byte) int {
 }
 
 func parseShortTime(dt *datetime, bs []byte) int {
-	var pos int
-	pos += parseHour(dt, bs)
+	pos := parseHour(dt, bs)
 	if bs[pos] != ':' {
 		return 0
 	}
@@ -141,9 +159,30 @@ func parseLongYear(dt *datetime, bs []byte) int {
 	return 4
 }
 
+func parseYearDay(dt *datetime, bs []byte) int {
+	dt.yday = parseInt(bs, 3)
+	return 3
+}
+
+func parseDate(dt *datetime, bs []byte) int {
+	pos := parseLongYear(dt, bs)
+	if bs[pos] != '-' {
+		return 0
+	}
+	pos++
+
+	pos += parseMonth(dt, bs[pos:])
+	if bs[pos] != '-' {
+		return 0
+	}
+	pos++
+
+	pos += parseDay(dt, bs[pos:])
+	return pos
+}
+
 func parseDateAlt(dt *datetime, bs []byte) int {
-	var pos int
-	pos += parseDay(dt, bs)
+	pos := parseDay(dt, bs)
 	if bs[pos] != '/' {
 		return 0
 	}
@@ -157,6 +196,14 @@ func parseDateAlt(dt *datetime, bs []byte) int {
 
 	pos += parseLongYear(dt, bs[pos:])
 	return pos
+}
+
+func parseDayName(dt *datetime, bs []byte) int {
+	return 0
+}
+
+func parseMonthName(dt *datetime, bs []byte) int {
+	return 0
 }
 
 func parseInt(bs []byte, n int) int {
