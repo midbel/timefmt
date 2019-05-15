@@ -1,15 +1,17 @@
 package timefmt
 
 import (
+	"io"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func Parse(str, pattern string) time.Time {
+func Parse(str, pattern string) (time.Time, error) {
 	r := strings.NewReader(pattern)
 
 	var (
+		zero time.Time
 		dt  datetime
 		pos int
 	)
@@ -17,11 +19,14 @@ func Parse(str, pattern string) time.Time {
 	for {
 		b, err := r.ReadByte()
 		if err != nil {
-			break
+			if err == io.EOF {
+				break
+			}
+			return zero, parseError(str, pattern)
 		}
 		if b == '%' {
 			if b, err = r.ReadByte(); err != nil {
-				break
+				return zero, parseError(str, pattern)
 			}
 			if b == 'E' || b == 'O' {
 				b, _ = r.ReadByte() // ignore alternative conversion specifier
@@ -29,18 +34,18 @@ func Parse(str, pattern string) time.Time {
 			if fn, ok := converters[b]; ok {
 				n := fn(&dt, ds[pos:])
 				if n <= 0 {
-					break
+					return zero, parseError(str, pattern)
 				}
 				pos += n
 			}
 		} else {
 			if b != ds[pos] {
-				break
+				return zero, parseError(str, pattern)
 			}
 			pos++
 		}
 	}
-	return dt.Time()
+	return dt.Time(), nil
 }
 
 type datetime struct {

@@ -26,9 +26,12 @@ func TestParse(t *testing.T) {
 		{Format: "%X", Data: "17:35:18", Want: timeNow()},
 	}
 	for i, d := range data {
-		got := Parse(d.Data, d.Format)
+		got, err := Parse(d.Data, d.Format)
+		if err != nil {
+			t.Errorf("%d: fail to parse %s as %s: %s", i+1, d.Data, d.Format, err)
+			continue
+		}
 		if !got.Equal(d.Want) {
-			// t.Log(got, d.Want)
 			t.Errorf("%d: date badly parsed: want %s, got %s", i+1, Format(d.Want, d.Format), Format(got, d.Format))
 		}
 	}
