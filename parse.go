@@ -12,8 +12,8 @@ func Parse(str, pattern string) (time.Time, error) {
 
 	var (
 		zero time.Time
-		dt  datetime
-		pos int
+		dt   datetime
+		pos  int
 	)
 	ds := []byte(str)
 	for {

@@ -6,6 +6,28 @@ import (
 )
 
 func TestParse(t *testing.T) {
+	t.Run("parse/pass", testParsePass)
+	t.Run("parse/fail", testParseFail)
+}
+
+func testParseFail(t *testing.T) {
+	data := []struct {
+		Format string
+		Data   string
+	}{
+		{Format: "%Y-%m-%d", Data: "2019/05/18"},
+		{Format: "%Y-%m-%d", Data: "helloworld"},
+	}
+	for i, d := range data {
+		_, err := Parse(d.Data, d.Format)
+		if err == nil {
+			t.Errorf("%d: parsing %s as %s should failed", i+1, d.Data, d.Format)
+			continue
+		}
+	}
+}
+
+func testParsePass(t *testing.T) {
 	timeNow = func() time.Time {
 		return time.Date(2019, 5, 8, 17, 35, 18, 0, time.Local)
 	}
