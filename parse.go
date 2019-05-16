@@ -16,7 +16,7 @@ func Parse(str, pattern string) (time.Time, error) {
 		pos  int
 	)
 	ds := []byte(str)
-	for {
+	for pos < len(ds) {
 		b, err := r.ReadByte()
 		if err != nil {
 			if err == io.EOF {
