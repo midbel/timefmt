@@ -31,6 +31,7 @@ func testParsePass(t *testing.T) {
 	timeNow = func() time.Time {
 		return time.Date(2019, 5, 8, 17, 35, 18, 0, time.Local)
 	}
+	now := timeNow()
 	data := []struct {
 		Format string
 		Data   string
@@ -44,9 +45,9 @@ func testParsePass(t *testing.T) {
 		{Format: "%H:%M", Data: "17:35", Want: timeNow().Truncate(60 * time.Second)},
 		{Format: "%R", Data: "17:35", Want: timeNow().Truncate(60 * time.Second)},
 		{Format: "%H:%M:%S", Data: "17:35:18", Want: timeNow()},
-		{Format: "%T", Data: "17:35:18", Want: timeNow()},
-		{Format: "%X", Data: "17:35:18", Want: timeNow()},
-		{Format: "%Y-%j", Data: "2019-128", Want: timeNow().Truncate(time.Hour * 24)},
+		{Format: "%T", Data: "17:35:18", Want: now},
+		{Format: "%X", Data: "17:35:18", Want: now},
+		{Format: "%Y-%j", Data: "2019-128", Want: time.Date(2019, 5, 8, 0, 0, 0, 0, time.Local)},
 	}
 	for i, d := range data {
 		got, err := Parse(d.Data, d.Format)
