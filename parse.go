@@ -90,7 +90,7 @@ func init() {
 		'e': parseDay,
 		'D': parseDateAlt,
 		'H': parseHour,
-		'I': parseYearDay,
+		'j': parseYearDay,
 		'm': parseMonth,
 		'M': parseMinute,
 		'S': parseSecond,
