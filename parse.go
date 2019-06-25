@@ -73,6 +73,9 @@ func (d datetime) Time() time.Time {
 		d.day = 1
 	}
 	t := time.Date(d.year, time.Month(d.mon), d.day, d.hour, d.min, d.sec, 0, time.Local)
+	if doy := t.YearDay(); d.yday > 0 && doy != d.yday {
+		t = t.AddDate(0, 0, -doy+d.yday)
+	}
 	return t
 }
 
